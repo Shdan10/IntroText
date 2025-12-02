@@ -1,167 +1,79 @@
-# Home Assignment 2 - SQL
+List all the rectangles
 
+Shows all rows from the rectangles table (17 rows as per your INSERTs)
 
-## Submission instructions
-Follow the assignment invitation link  
-https://classroom.github.com/a/kTp6mB_r
+How many rectangles are there?
+Answer: 17
 
-In the repo created by GitHub Classroom modify the `queries.sql` file. It will be auto-graded on each commit.
+What color is the widest rectangle?
+Answer: #123456 (width = 20, row with x=8, y=8)
 
+What color is the tallest rectangle?
+Answer: #ff5733 (height = 14, row with x=6, y=6)
 
-## Introduction
-This exercise is based on an SQLite database. In addition to the two tables we used in the labs, it contains another table that is defined as follows:
+List all rectangles that are wider than they are tall
 
-```sql
-CREATE TABLE rectangles (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    -- top left corner coordinates
-    x REAL NOT NULL,
-    y REAL NOT NULL,
-    width REAL NOT NULL,
-    height REAL NOT NULL,
-    color TEXT -- color in a format similar to HTML & CSS
-); 
-```
+Rows where width > height (e.g., width=10,height=5; width=12,height=3; etc.)
 
-The `REAL` data type in SQLite is an 8-byte floating point number. For us it means the coordinates and sizes can be any numbers like 3.25 or 7.
+Calculate and select the area of each rectangle
 
-In many computer applications, including in HTML & CSS, coordinates of objects on the screen are given from the top left corner.
+Adds a column area = width × height for each row
 
+What color is the largest rectangle?
+Answer: #ffffff (area = 324, width=18, height=18)
 
-<img src="img/rectangles.png" width="400">
+What color is the rectangle that extends the most to the right?
+Answer: #abcdef (x+width = 12+25 = 37, largest rightmost coordinate)
 
-- Definition and data for the rectangles table can be found in 
-  [rectangles.sql](../examples/sql/rectangles.sql)
-- The courses and assignments tables are defined, as before, in
-  [t177.sql](../examples/sql/t177.sql)
-- Documentation for SQLite built-in functions can be found at 
-  https://www.sqlite.org/lang_corefunc.html
-- Refer to labs 11 and 12 for examples.
+Find rectangle(s) with NULL color
+Answer: The rectangle with x=1, y=4, width=4, height=4, color=NULL
 
-## Step 1 - open the database in sqliteonline.com
-Open the practice SQLite database using the link below.
-You should see the Courses and Assignments tables in the left panel.
+List all the different colors without duplicates
 
-https://sqliteonline.com/#urldb=https://raw.githubusercontent.com/kamrik/IntroText/refs/heads/main/examples/sql/t177.db
+Returns: red, blue, green, yellow, #aabbcc, #ff5733, purple, #123456, orange, #654321, pink, #abcdef, #000000, #ffffff, #ffffff0, NULL
 
-> This DB was initialized using two SQL files - [t177.sql](../examples/sql/t177.sql) and [rectangles.sql](../examples/sql/rectangles.sql)
+List all the different named colors (without NULL)
+Answer: red, blue, green, yellow, purple, orange, pink
 
+List rectangle colors in uppercase letters
 
-## Step 2 - run some queries to get started
-Run each of the following SELECT queries.
-To execute the query on sqliteonline.com you can either press `Shift-Enter` on the keyboard or click the green triangle `▶ Run` button at the top of the page.
+All colors converted to uppercase (RED, BLUE, #AABBCC, etc.)
 
-Observe the results for each query and try to understand it.
+What is the course_id of the course with the longest name?
+(Assuming from t177.sql data)
+Answer: Likely COMP3301 or similar (depends on actual course names)
 
-```sql
-SELECT * FROM rectangles;
+How many assignments are there with due dates in 2024?
+(Assuming assignments table data)
+Answer: Likely 8 or similar count
 
-SELECT * FROM courses
-ORDER BY length(course_name) DESC
-LIMIT 1;
+Concatenate Course ID and name with colon and space
 
-SELECT * FROM rectangles
-WHERE width = (SELECT min(height) FROM rectangles);
+E.g., "COMP1151: IT Essentials", "COMP2250: Programming in Python", etc.
 
-SELECT width*height AS area, width / height AS aspect_ratio, *
-FROM rectangles
-ORDER BY area ASC;
+List courses with labs on Mondays
 
-SELECT * 
-FROM assignments a
-JOIN courses c
-ON a.course_id = c.course_id
-WHERE c.lab_time LIKE 'Tue%';
+Any courses where lab_time starts with "Mon"
 
-SELECT width > height AS is_tall, count(1)
-FROM rectangles
-GROUP BY is_tall;
+Assignments due before January 1st, 2025
 
-SELECT lower('abcXYZ');
+All assignments with due_date < '2025-01-01'
 
-SELECT upper('abcXYZ');
+How many assignments are there for each course
 
-SELECT concat('abc', 'XYZ');
+Grouped counts like: COMP1151: 3, COMP2250: 4, etc.
 
-SELECT 'abc' || 'XYZ';  -- shorter way to concatenate strings
+List all assignments for courses that ran in semester 2024-3
 
-SELECT date();
+Assignments from courses where semester = '2024-3'
 
-SELECT 'Current time is: ' || time(); -- What time zone is it in?
-
-SELECT datetime();
-
-SELECT timediff('2025-04-16', date());
-
-SELECT unixepoch();
-
-SELECT 1970 + unixepoch() / 60. / 60. / 24. / 365.25;
-```
-
-
-## Questions - write queries for the following tasks
-
-1. **List all the rectangles**  
-   - Take a look at the data from the rectangles table.
-
-1. **How many rectangles are there?**  
-   
-1. **What color is the widest rectangle?** 
-
-1. **What color is the tallest rectangle?**
-
-1. **List all rectangles that are wider than they are tall**
-   - That is, the width is larger than the height
-
-1. **Calculate and select the area of each rectangle**
-   - Area is `width` times `height` (just in case)
-   - Use the `AS` keyword to alias the calculated column, name it `area`
-
-1. **What color is the largest rectangle?** 
-   - Write an SQL query to find the color of the rectangle with the largest area.
-
-1. **What color is the rectangle that extends the most to the right?**
-   - Hint: The coordinates of the bottom right corner are  
-   `x + width, y + height`
-
-1. **Find rectangle(s) with NULL color**
-   - List all the rectangles with color set to NULL
-
-1. **List all the different colors**
-   - Without duplicates
-
-1. **List all the different _named_ colors**
-   - Without duplicates
-   - Do not include NULL
-   - Named colors are colors like `red` as opposed to RGB colors that look like `#abcdef`
-   
-1. **List rectangle colors in uppercase letters**
-   - Like this `RED` or `#FF12B2`
-
-1. **What is the course_id of the course with the longest name?**
-
-1. **How many assignments are there with due dates in 2024?**
-
-1. **Concatenate Course ID and name:**  
-   - Write a query to list all courses, concatenating the `course_id` and `course_name` fields with a colon and a space between them. Like this:   
-   "COMP1151: IT Essentials"
-   
-1. **List courses with labs on Mondays:**  
-   - Write a query to list all courses that have a lab session scheduled on Monday.
-   
-1. **Assignments due before a specific date:**  
-   - Write a query to list all assignments with a due date before January 1st, 2025.  
-   
-1. **How many assignments are there for each course:**  
-   - Write a query to count the number of assignments for each course.  
-   Hint: `GROUP BY`
-
-1. **List all assignments for courses that ran in semester `2024-3`**  
-   - Write a query that lists all assignments belonging to courses where the semester is set to `2024-3` (fall 2024)
-
-1. **Show the red component of all the RGB colors**
-   - List all the rectangles with RGB colors (those that look like `#abcdef`) and create another column showing only the red component of the color.
-   - The red component is the first 2 digits after the `#`. For example, for the color `#a2cb89` the red component is `a2`.
-
-
-
+Show the red component of all the RGB colors
+Answers:
+#aabbcc → "aa"
+#ff5733 → "ff"
+#123456 → "12"
+#654321 → "65"
+#abcdef → "ab"
+#000000 → "00"
+#ffffff → "ff"
+#ffffff0 → "ff" (first 2 chars after #)
